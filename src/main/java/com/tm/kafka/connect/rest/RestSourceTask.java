@@ -70,6 +70,7 @@ public class RestSourceTask extends SourceTask {
       Payload payload = new StringPayload(data);
       Request request = requestFactory.createRequest(payload, method);
 
+      //TODO the transform should not be done on the data, but on the response
       transformer.transform(request);
 
       if (log.isTraceEnabled()) {

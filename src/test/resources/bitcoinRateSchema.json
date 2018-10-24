@@ -1,0 +1,33 @@
+ {
+ 	"type": "map",
+ 	"name": "rates",
+ 	"keys": {
+ 		"type": "string"
+ 	},
+ 	"values": {
+ 		"name": "rate",
+ 		"type": "struct",
+ 		"optional": false,
+ 		"fields": [{
+ 			"field": "symbol",
+ 			"type": "string",
+ 			"optional": false
+ 		}, {
+ 			"field": "last",
+ 			"type": "double",
+ 			"optional": false
+ 		}, {
+ 			"field": "buy",
+ 			"type": "double",
+ 			"optional": false
+ 		}, {
+ 			"field": "sell",
+ 			"type": "double",
+ 			"optional": false
+ 		}, {
+ 			"field": "15m",
+ 			"type": "double",
+ 			"optional": false
+ 		}]
+ 	}
+ }

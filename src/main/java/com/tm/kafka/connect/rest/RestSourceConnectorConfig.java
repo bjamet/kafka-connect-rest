@@ -20,6 +20,7 @@ import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Importance;
 import org.apache.kafka.common.config.ConfigDef.Type;
+import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -116,6 +117,13 @@ public class RestSourceConnectorConfig extends AbstractConfig implements Request
   private static final String SOURCE_REQUEST_EXECUTOR_DOC = "HTTP request executor. Default is OkHttpRequestExecutor";
   private static final String SOURCE_REQUEST_EXECUTOR_DEFAULT = "com.tm.kafka.connect.rest.http.executor.OkHttpRequestExecutor";
 
+  static final String SOURCE_PAYLOAD_JSON_SCHEMA_CONFIG = "rest.source.payload.json.schema";
+  private static final String SOURCE_PAYLOAD_JSON_SCHEMA_DISPLAY = "Json schema of requested payload for kafka convertor (json/avro)";
+  private static final String SOURCE_PAYLOAD_JSON_SCHEMA_DOC = "Json schema of requested payload for kafka convertor (json/avro), when using SourceJSONPayloadConverter";
+  
+  
+  private static final  PayloadSchemaValidator payloadSchemaValidator= new PayloadSchemaValidator();
+  
   private final TopicSelector topicSelector;
   private final PayloadToSourceRecordConverter payloadToSourceRecordConverter;
   private final Map<String, String> requestProperties;
@@ -274,6 +282,17 @@ public class RestSourceConnectorConfig extends AbstractConfig implements Request
         ++orderInGroup,
         ConfigDef.Width.NONE,
         SOURCE_PAYLOAD_REPLACE_DISPLAY)
+      
+      .define(SOURCE_PAYLOAD_JSON_SCHEMA_CONFIG,
+    	        Type.STRING,
+    	        "",
+    	        payloadSchemaValidator,
+    	        Importance.LOW,
+    	        SOURCE_PAYLOAD_JSON_SCHEMA_DOC,
+    	        group,
+    	        ++orderInGroup,
+    	        ConfigDef.Width.NONE,
+    	        SOURCE_PAYLOAD_JSON_SCHEMA_DISPLAY)
 
       .define(SOURCE_HTTP_CONNECTION_TIMEOUT_CONFIG,
         Type.LONG,
@@ -406,6 +425,11 @@ public class RestSourceConnectorConfig extends AbstractConfig implements Request
   @Override
   public String getPayloadReplacements() {
     return this.getString(SOURCE_PAYLOAD_REPLACE_CONFIG);
+  }
+  
+  public Schema getPayloadJsonSchema() {
+	  return payloadSchemaValidator.getSchema(this.getString(SOURCE_PAYLOAD_JSON_SCHEMA_CONFIG));
+	  
   }
 
   @Override
