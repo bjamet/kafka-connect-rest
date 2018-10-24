@@ -61,23 +61,18 @@ private Schema jsonSchema;
     
     
     SchemaAndValue sv ;
-    
-    if (jsonSchema!=null) {
+    try {
+    	JsonNode data =  om.readTree(bytes);
+    	//work also if jsonSchema is null
+	    Object value = convertToConnect(jsonSchema,data);
+        
+        sv = new SchemaAndValue(jsonSchema,value);
     	
-    	try {
-	    	JsonNode data =  om.readTree(bytes);
-	    	
-	    	
-	        Object value = convertToConnect(jsonSchema,data);
-	        
-	        sv = new SchemaAndValue(jsonSchema,value);
-    	} catch (IOException e) {
-    		//when requested data was not json
-    		throw new RuntimeException(e);
-    	}
-    }else {
-    	sv = converterWithoutSchema.toConnectData(topic,  bytes);
-    }
+	    
+    } catch (IOException e) {
+		//when requested data was not json
+		throw new RuntimeException(e);
+	}
     
     SourceRecord sourceRecord = new SourceRecord(sourcePartition, sourceOffset, topic, sv.schema(), sv.value());
     records.add(sourceRecord);

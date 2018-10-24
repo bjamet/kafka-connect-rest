@@ -52,6 +52,14 @@ public class SourceJSONPayloadConverterTest {
     List<SourceRecord> records = subject.convert(json.getBytes());
     assertNotNull(records);
     assertEquals(1,records.size());
+    
+    //coverage
+    json = "{\"key1\":\"val1\",\"key2\":\"val2\",\"key3\":true,\"key4\":12345,\"key5\":1.2,\"key6\":[],\"key7\":null}";
+    
+
+    records = subject.convert(json.getBytes());
+    assertNotNull(records);
+    assertEquals(1,records.size());
    
   }
   
@@ -134,6 +142,53 @@ public class SourceJSONPayloadConverterTest {
 	    
 
 	    
+  }
+  
+  @Test
+  public void convertMapIntKeySchema() throws IOException {
+	  SourceJSONPayloadConverter convertor = new SourceJSONPayloadConverter();
+	    Map<String,String> configs = new HashMap<>();
+	    configs.put("rest.source.properties", "Content-Type:application/json,Accept:application/json");
+	    configs.put("rest.source.url", "https://blockchain.info/ticker");
+	    configs.put("rest.source.destination.topics", "test");
+	  
+	   
+	    configs.put("rest.source.payload.json.schema", getData("MapIntKeySchema.json")); 
+	    		
+	    convertor.start(new RestSourceConnectorConfig(configs));
+	    
+	    String json = getData("MapIntKey.json");
+	    
+	    List<SourceRecord> records = convertor.convert(json.getBytes());
+	    assertNotNull(records);
+	    assertEquals(1,records.size());
+	    
+	    SourceRecord rec = records.get(0);
+	    assertNotNull(rec.valueSchema());
+	    
+	    JsonConverter jConv = new JsonConverter();
+	    jConv.configure(new HashMap<>(),false);
+	    jConv.fromConnectData("dummy", rec.valueSchema(), rec.value());
+	    
+	    //coverage bad bytes
+	    try {
+	    json="[ [ 123, {\"key5\":[\"34\"]}]]";
+	    convertor.convert(json.getBytes());
+	    }catch(DataException e) {};
+	    
+	  //coverage bad intKey
+	    try {
+	    json="{}";
+	    convertor.convert(json.getBytes());
+	    }catch(DataException e) {};
+	    try {
+		    json="[{}]";
+		    convertor.convert(json.getBytes());
+		    }catch(DataException e) {};
+		    try {
+			    json="[[]]";
+			    convertor.convert(json.getBytes());
+			    }catch(DataException e) {};
   }
 
   @Test

@@ -1,0 +1,64 @@
+ {
+ 	"type": "map",
+ 	"name": "rates",
+ 	"keys": {
+ 		"type": "int8"
+ 	},
+ 	"values": {
+ 		"type": "struct",
+ 		"optional": false,
+ 		"fields":[{
+ 			"field":"key1",
+ 			"type":"int16",
+ 			"optional":true
+ 		},
+ 		{
+ 			"field":"key2",
+ 			"type":"int32",
+ 			"optional":true
+ 		},
+ 		{
+ 			"field":"key3",
+ 			"type":"float",
+ 			"optional":true
+ 		},
+ 		{
+ 			"field":"key4",
+ 			"type":"int64",
+ 			
+ 			"optional":true,
+ 			"name":"org.apache.kafka.connect.data.Timestamp"
+ 		},
+ 		{
+ 			"field":"key5",
+ 			
+ 			"optional":true,
+ 			"type":"array",
+ 			"items":{
+ 			   
+	 			"type":"bytes"
+ 			}
+ 		},
+ 		{
+ 			"field":"time",
+ 			"type":"int32",
+ 			"optional":true,
+ 			"name":"org.apache.kafka.connect.data.Time"
+ 		},
+ 		{
+ 			"field":"date",
+ 			"type":"int32",
+ 			"optional":true,
+ 			"name":"org.apache.kafka.connect.data.Date"
+ 		},{
+ 			"field":"decimal",
+ 			"type":"bytes",
+ 			
+ 			"optional":true,
+ 			"parameters":{
+ 				"scale":"3"
+ 			},
+ 			"name":"org.apache.kafka.connect.data.Decimal"
+ 		}]
+ 	}
+ }
