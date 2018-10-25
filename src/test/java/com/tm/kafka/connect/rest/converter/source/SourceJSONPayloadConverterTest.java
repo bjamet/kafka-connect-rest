@@ -184,11 +184,13 @@ public class SourceJSONPayloadConverterTest {
 	    try {
 		    json="[{}]";
 		    convertor.convert(json.getBytes());
-		    }catch(DataException e) {};
-		    try {
-			    json="[[]]";
-			    convertor.convert(json.getBytes());
-			    }catch(DataException e) {};
+		}catch(DataException e) {};
+	    try {
+		    json="[[]]";
+		    convertor.convert(json.getBytes());
+		}catch(DataException e) {};
+		
+		
   }
 
   @Test
